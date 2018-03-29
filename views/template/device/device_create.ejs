@@ -1,0 +1,128 @@
+<%layout('../../layout')%>
+<div id="page-wrapper">
+    <div class="row">
+        <div class="col-lg-12">
+            <h1 class="page-header">DEVICE</h1>
+        </div>
+        <!-- /.col-lg-12 -->
+    </div>
+    <!-- /.row -->
+    <div class="row">
+        <div class="col-lg-12">
+            <p id="errLog">
+            <% if(status == 'fail') getErr(onErr); %>
+            </p>
+            <div class="panel panel-default">
+                <div class="panel-body">
+
+                    <h3>Create Device</h3>
+                    <div class="table-responsive">
+                        <div class="col-lg-12">
+                            <form role="form">
+                                <% if (status == 'success') { %>    
+                                <div class="form-group">
+                                    <label>Dev EUI</label>
+                                    <input class="form-control" id="devEUI">
+                                </div>
+                                <div class="form-group">
+                                    <label>Select model</label>
+                                    <select class="form-control" id="model">
+                                    <% deviceModels.forEach(function(item){ %>
+                                        <option value="<%= item.model %>"><%= item.model %></option>
+                                    <% }); %>
+                                      </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>Authenticate Method</label>
+                                    <input class="form-control" id="authenMethod">
+                                </div>
+                                <div class="form-group">
+                                    <label>App EUI</label>
+                                    <input class="form-control" id="appEUI">
+                                </div>
+                                <div class="form-group">
+                                    <label>App Key</label>
+                                    <input class="form-control" id="appKey">
+                                </div>
+                                <div class="form-group">
+                                    <label>App Secret Key</label>
+                                    <input class="form-control" id="appSKey">
+                                </div>
+                                <div class="form-group">
+                                    <label>Network Secret Key</label>
+                                    <input class="form-control" id="netSKey">
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Device Mac Address ?</label>
+                                    <input class="form-control" id="devAddr">
+                                </div>
+                                <div class="form-group">
+                                    <label>Keep Alive Time</label>
+                                    <input class="form-control" id="keepAliveTimeout">
+                                </div>
+                                <div class="form-group">
+                                    <label>Alarm Repeat Time</label>
+                                    <input class="form-control" id="alarmRepeatTimeout">
+                                </div>
+                                <a href="#" id="createDevice" class="btn btn-lg btn-success btn-block">Create</a>
+                                <% } %>
+                            </form>
+                        </div>
+                    </div>
+                   
+                </div>
+            </div>
+        </div>
+        <!-- /.col-lg-12 -->
+    </div>
+    <!-- /.row -->
+</div>
+<!-- /#page-wrapper -->
+
+<script>
+    $(document).ready(function(){
+        $('#createDevice').click(function(e){
+            e.preventDefault();
+            $.post("/device/create",{
+            	devEUI:$('#devEUI').val(),
+            	model:$('#model').val(),
+                authenMethod:$('#authenMethod').val(),
+                appEUI:$('#appEUI').val(),
+                appKey:$('#appKey').val(),
+                appSKey:$('#appSKey').val(),
+                netSKey:$('#netSKey').val(),
+                devAddr:$('#devAddr').val(),
+                keepAliveTimeout:$('#keepAliveTimeout').val(),                    
+                alarmRepeatTimeout:$('#alarmRepeatTimeout').val()
+        	})
+            .success(function(data){
+                console.log(data);
+                if(data.status == 'success') {
+                    getToastr(data);
+                } else {
+                    getToastr(data);
+                    getErr(data.onErr);
+                }
+            });
+        });
+    });
+    function getToastr(data){
+        var title, message;
+        toastr.options = {
+            "timeOut": "3000",
+        }
+        if(data.status == 'success'){
+            title = "Success";
+            message = "You have created a device";
+            toastr.options.onHidden = function(){
+                window.location = "list" ;
+            }
+            toastr.success(message, title);
+        } else if (data.status == 'fail'){
+            title = "Fail";
+            message = "You have failed in creating a device";
+            toastr.error(message, title);
+        }
+    }
+</script>

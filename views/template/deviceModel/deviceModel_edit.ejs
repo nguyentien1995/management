@@ -1,0 +1,104 @@
+<%layout('../../layout')%>
+<div id="page-wrapper">
+    <div class="row">
+        <div class="col-lg-12">
+            <h1 class="page-header">MODEL</h1>
+        </div>
+        <!-- /.col-lg-12 -->
+    </div>
+    <!-- /.row -->
+    <div class="row">
+        <div class="col-lg-12">
+            <p id="errLog">
+            <% if(status == 'fail') getErr(onErr); %>
+            </p>
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <h3>Update Model</h3>
+                    <% if (status == 'success') { %>
+                    <div class="table-responsive">
+                        <div class="col-lg-12">
+                            <form role="form">
+                            <% deviceModel.forEach(function(item){ %>
+                                <div class="form-group">
+                                    <label>Brand Name</label>
+                                    <input class="form-control" id="brandname" value="<%= item.brandname %>">
+                                </div>
+                                <div class="form-group">
+                                    <label>Model</label>
+                                    <input class="form-control" id="newModel" value="<%= item.model %>">
+                                    <input class="form-control" id="oldModel" value="<%= item.model %>" type="hidden">
+                                </div>
+                                <div class="form-group">
+                                    <label>Firmware Version</label>
+                                    <input class="form-control" id="firmwareVersion" value="<%= item.firmwareVersion %>">
+                                </div>
+                                <div class="form-group">
+                                    <label>Description</label>
+                                    <input class="form-control" id="description" value="<%= item.description %>">
+                                </div>
+                                <div class="form-group">
+                                    <label>Images</label>
+                                    <!-- todo -->
+                                    Need to do something with image over here
+                                </div>
+                                <input type="reset"  value="Start again" id= "myBtn" style="display: none;"/>
+                                <a href="" id="updateDeviceModel" class="btn btn-lg btn-success btn-block">SAVE</a>
+                            </form>
+                            <% }); %>
+                        </div>
+                    </div>
+                    <% } %>
+                </div>
+            </div>
+        </div>
+        <!-- /.col-lg-12 -->
+    </div>
+    <!-- /.row -->
+</div>
+<!-- /#page-wrapper -->
+
+<script>
+    $(document).ready(function(){
+        $('#updateDeviceModel').click(function(e){
+            e.preventDefault();
+            // todo
+            // 2. add image data to ajax
+            $.post("/deviceModel/edit" ,{
+                    brandname:$('#brandname').val(),
+                    newModel:$('#newModel').val(),
+                    oldModel:$('#oldModel').val(),
+                    firmwareVersion:$('#firmwareVersion').val(),
+                    description:$('#description').val()
+        	})
+            .success(function(data){
+                if(data.status == 'success') {
+                    getToastr(data);
+                } else if(data.status == 'fail') {
+                    getErr(data.onErr);
+                    getToastr(data);
+                    document.getElementById("myBtn").click();
+                }
+            });
+    	});
+
+        function getToastr(data){
+        var title, message;
+        toastr.options = {
+            "timeOut": "3000",
+        }
+        if(data.status == 'success'){
+            title = "Success";
+            message = "You have edited a model";
+            toastr.options.onHidden = function(){
+                window.location = "" + $('#newModel').val();
+            }
+            toastr.success(message, title);
+        } else if (data.status == 'fail'){
+            title = "Fail";
+            message = "You have failed in editing a model";
+            toastr.error(message, title);
+        }
+    }
+   	});
+</script>

@@ -1,0 +1,95 @@
+<%layout('../../layout')%>
+<div id="page-wrapper">
+    <div class="row">
+        <div class="col-lg-12">
+            <h1 class="page-header">DEVICE</h1>
+        </div>
+        <!-- /.col-lg-12 -->
+    </div>
+    <!-- /.row -->
+    <div class="row">
+        <div class="col-lg-12">
+            <p id="errLog"></p>
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <h3>Update Account</h3>
+                    <div class="table-responsive">
+                        <div class="col-lg-12">
+                            <form role="form">
+                            <% account.forEach(function(item){ %>
+                                <div class="form-group">
+                                    <label>Username</label>
+                                    <input class="form-control" id="newUsername" value="<%= item.username %>">
+                                    <input class="form-control" id="oldUsername" value="<%= item.username %>" type="hidden">
+                                </div>
+                                <div class="form-group">
+                                    <label>Role</label>
+                                    <select class="form-control" id="role">
+                                        <option value="Super Admin" 
+                                            <% if(item.role == 'Super Admin') { %> Selected <% } %>
+                                        >Super Admin</option>
+                                        <option value="Database Admin"
+                                            <% if(item.role == 'Database Admin') { %> Selected <% } %>
+                                        >DB Admin</option>
+                                        <option value="Test Admin"
+                                            <% if(item.role == 'Test Admin') { %> Selected <% } %>
+                                        >Test Admin</option>
+                                    </select>
+                                </div>
+                                <input type="reset"  value="Start again" id= "myBtn" style="display: none;"/>
+                                <a href="" id="updateDevice" class="btn btn-lg btn-success btn-block">SAVE</a>
+                            </form>
+                            <% }); %>
+                        </div>
+                    </div>
+                   
+                </div>
+            </div>
+        </div>
+        <!-- /.col-lg-12 -->
+    </div>
+    <!-- /.row -->
+</div>
+<!-- /#page-wrapper -->
+
+<script>
+    $(document).ready(function(){
+        $('#updateDevice').click(function(e){
+            e.preventDefault();
+            var params;
+            $.post("/account/edit" ,{
+                    newUsername:$('#newUsername').val(),
+            		oldUsername:$('#oldUsername').val(),
+                    role: $('#role :selected').val()
+        	})
+            .success(function(data){
+                if(data.status == 'success') {
+                    getToastr(data);
+                } else {
+                    getErr(data.onErr);
+                    getToastr(data);
+                    document.getElementById("myBtn").click();
+                }
+            });
+    	});
+   	});
+
+    function getToastr(data){
+        var title, message;
+        toastr.options = {
+            "timeOut": "3000",
+        }
+        if(data.status == 'success'){
+            title = "Success";
+            message = "You have edited an account";
+            toastr.options.onHidden = function(){
+                window.location = "" + $('#newUsername').val();
+            }
+            toastr.success(message, title);
+        } else if (data.status == 'fail'){
+            title = "Fail";
+            message = "You have failed in editing an account";
+            toastr.error(message, title);
+        }
+    }
+</script>

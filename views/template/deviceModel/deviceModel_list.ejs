@@ -1,0 +1,113 @@
+<%layout('../../layout')%>
+<div id="page-wrapper">
+    <div class="row">
+        <div class="col-lg-12">
+            <h1 class="page-header">MODEL</h1>
+        </div>
+        <!-- /.col-lg-12 -->
+    </div>
+    <!-- /.row -->
+    <div class="row">
+        <div class="col-lg-12">
+            <p id="errLog">
+            <% if(status == 'fail') getErr(onErr); %>
+            </p>
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    List Model
+                </div>
+                <!-- /.panel-heading -->
+                <div class="panel-body">
+                    <% if (status == 'success') { %>
+                    <div class="dataTable_wrapper">
+                        <table class="table table-striped table-bordered table-hover" id="dataTables-example">
+                            <thead>
+                                <tr>
+                                    <th>Brand Name</th>
+                                    <th>Model</th>
+                                    <th>Firmware Version</th>
+                                    <th>Description</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            <% deviceModels.forEach(function(item){ %>
+                                <tr class="odd gradeX">
+                                    <td><%= item.brandname %></td>
+                                    <td><%= item.model %></td>
+                                    <td><%= item.firmwareVersion %></td>
+                                    <td><%= item.description %></td>
+                                    <td>
+                                        <a href="edit/<%= item.model%>">EDIT</a> - 
+                                        <a class = 'delete' id = "<%= item.model %>" href="#/<%= item.model %>">DELETE</a>
+                                        <input type="hidden" id="model" value="<%= item.model %>">
+                                    </td>
+                                </tr>
+                            <% }); %>
+                            </tbody>
+                        </table>
+                    </div>
+                    <% } %>
+                    <a href="create">CREATE</a>
+                    <!-- /.table-responsive -->
+                </div>
+                <!-- /.panel-body -->
+            </div>
+            <!-- /.panel -->
+        </div>
+        <!-- /.col-lg-12 -->
+    </div>
+    <!-- /.row -->
+    <!-- /.row -->
+</div>
+<!-- /#page-wrapper -->
+    <!-- Page-Level Demo Scripts - Tables - Use for reference -->
+    <script src="/bower_components/datatables/media/js/jquery.dataTables.min.js"></script>
+    <script src="/bower_components/datatables-plugins/integration/bootstrap/3/dataTables.bootstrap.min.js"></script>
+    <script>
+    $(document).ready(function() {
+        $('table').dataTable({
+                responsive: true
+        });
+    });
+
+    $(document).ready(function(){
+        $("a").click(function(e){
+            if($(this).attr("class") == "delete") {
+                e.preventDefault();
+                var model = $(this).attr("id");
+                $.get("/deviceModel/delete/" + model )
+                    .success(function(data){
+                    if(data.status == 'success') {
+                        getToastr(data);
+                        $('#dataTables-example').load(document.URL +  ' #dataTables-example');
+                    } else if(data.status == 'fail'){
+                        getToastr(data);
+                        getErr(data.onErr);
+                    }
+                });
+            }
+        });
+    });
+
+    function getToastr(data){
+        var title, message;
+        toastr.options = {
+            "timeOut": "3000",
+        }
+        if(data.status == 'success'){
+            title = "Success";
+            message = "You have deleted a model";
+            toastr.options.onHidden = function(){
+                location.reload();
+            }
+            toastr.success(message, title);
+        } else if (data.status == 'fail'){
+            title = "Fail";
+            message = "You have failed in deleting a model";
+            toastr.error(message, title);
+        }
+    }
+    </script>
+</body>
+</html>

@@ -1,0 +1,92 @@
+<%layout('../../layout')%>
+<div id="page-wrapper">
+    <div class="row">
+        <div class="col-lg-12">
+            <h1 class="page-header">CUSTOMER</h1>
+        </div>
+        <!-- /.col-lg-12 -->
+    </div>
+    <!-- /.row -->
+    <div class="row">
+        <div class="col-lg-12">
+            <p id="errLog"></p>
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <h3>Create Customer</h3>
+                    <div class="table-responsive">
+                        <div class="col-lg-12">
+                            <form role="form" method="post" action="">
+                                <div class="form-group">
+                                    <label>phone</label>
+                                    <input class="form-control" id="phone">
+                                </div>
+                                <div class="form-group">
+                                    <label>email</label>
+                                    <input class="form-control" id="email">
+                                </div>
+                                <div class="form-group">
+                                    <label>password</label>
+                                    <input type="password" class="form-control" id="password">
+                                </div>
+                                <div class="form-group">
+                                    <label>firstName</label>
+                                    <input class="form-control" id="firstName">
+                                </div>
+                                <div class="form-group">
+                                    <label>lastName</label>
+                                    <input class="form-control" id="lastName">
+                                </div>
+                                <p href="#" id="createCustomer" class="btn btn-lg btn-success btn-block">Create</p>
+                            </form>
+                        </div>
+                    </div>
+                   
+                </div>
+            </div>
+        </div>
+        <!-- /.col-lg-12 -->
+    </div>
+    <!-- /.row -->
+</div>
+<!-- /#page-wrapper -->
+
+<script>
+    $(document).ready(function(){
+        $('#createCustomer').click(function(e){
+            e.preventDefault();
+            $.post("/customer/create",{
+            		firstName:$('#firstName').val(),
+                    lastName:$('#lastName').val(),
+                    password:$('#password').val(),
+                    email:$('#email').val(),
+                    phone:$('#phone').val()
+        	})
+            .success(function(data){
+                if(data.status == 'success') {
+                    getToastr(data);
+                } else {
+                    getToastr(data);
+                    getErr(data.onErr);
+                }
+            });
+    	});
+   	});
+    function getToastr(data){
+        var title, message;
+        toastr.options = {
+            "timeOut": "3000",
+        }
+        if(data.status == 'success'){
+            title = "Success";
+            message = "You have created a customer";
+            toastr.options.onHidden = function(){
+                window.location = "list" ;
+            }
+            toastr.success(message, title);
+        } else if (data.status == 'fail'){
+            title = "Fail";
+            message = "You have failed in creating a customer";
+            toastr.error(message, title);
+        }
+    }
+</script>

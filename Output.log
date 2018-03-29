@@ -1,0 +1,31 @@
+Wed Mar 28 2018 17:43:14 GMT+0700 (ICT)
+Tryng connect to database
+Server is now listening in port port 81
+Your app is connected to database now
+[0mGET / [36m302 [0m23.159 ms - 28[0m
+TRACE | Request indexLoginGet in indexController from 118.107.71.250:81
+[0mGET /login [32m200 [0m22.722 ms - 4244[0m
+[0mGET /favicon.ico [33m404 [0m10.414 ms - 1557[0m
+[0mGET /favicon.ico [33m404 [0m6.892 ms - 1557[0m
+[0mGET / [36m302 [0m3.288 ms - 28[0m
+TRACE | Request indexLoginGet in indexController from 118.107.71.250:81
+[0mGET /login [32m200 [0m14.355 ms - 4244[0m
+[0mGET / [36m302 [0m5.537 ms - 28[0m
+TRACE | Request indexLoginGet in indexController from 118.107.71.250:81
+[0mGET /login [32m200 [0m8.470 ms - 4244[0m
+[0mGET / [36m302 [0m3.095 ms - 28[0m
+TRACE | Request indexLoginGet in indexController from 118.107.71.250:81
+[0mGET /login [32m200 [0m5.129 ms - 4244[0m
+[0mGET / [36m302 [0m4.101 ms - 28[0m
+[0mGET / [36m302 [0m3.355 ms - 28[0m
+[0mGET / [36m302 [0m3.642 ms - 28[0m
+[0mGET / [36m302 [0m7.453 ms - 28[0m
+[0mGET / [36m302 [0m2.781 ms - 28[0m
+[0mGET / [36m302 [0m2.856 ms - 28[0m
+[0mGET / [36m302 [0m3.582 ms - 28[0m
+TRACE | Request indexLoginGet in indexController from 118.107.71.250:81
+[0mGET /login [32m200 [0m5.594 ms - 4244[0m
+TRACE | Request indexLoginGet in indexController from 118.107.71.250:81
+[0mGET /login [32m200 [0m6.896 ms - 4244[0m
+[0mGET /favicon.ico [33m404 [0m4.184 ms - 1557[0m
+[0mPOST /api/listDeviceByLocation [33m404 [0m33.452 ms - 1560[0m
